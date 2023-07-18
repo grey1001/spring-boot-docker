@@ -43,7 +43,11 @@ pipeline {
         }
         stage("deploytok8s") {
             steps {
-                sh 'kubectl apply -f springapp.yml'
+                script {
+                    dir('spring-boot-docker') {
+                        sh 'kubectl apply -f springapp.yml'
+                    }
+                }
             }
         }
     }
