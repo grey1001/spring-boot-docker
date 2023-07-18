@@ -26,7 +26,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-login') {
-                        sh 'docker tag greyabiwon/greyspringapp.v1:latest'
+                        sh 'docker tag greyspringapp.v1:latest greyabiwon/greyspringapp.v1:latest'
                         sh 'docker push greyabiwon/greyspringapp.v1:latest'
                     }
                 }
