@@ -2,7 +2,6 @@ pipeline {
     agent {
         label 'master_node'
     }
-}
     tools {
         maven 'mymaven'
         dockerTool 'mydocker'
@@ -16,15 +15,15 @@ pipeline {
                 git url: 'https://github.com/grey1001/spring-boot-docker.git'
             }
         }
-    }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    def app = docker.build(DOCKER_IMAGE_NAME)    
+                    def app = docker.build(DOCKER_IMAGE_NAME)
                 }
             }
         }
-        
+
         stage('Push Docker Image') {
             steps {
                 script {
@@ -36,3 +35,5 @@ pipeline {
                 }
             }
         }
+    }
+}
