@@ -38,5 +38,10 @@ pipeline {
                 }
             }
         }
+        stage("deploytok8s") {
+            steps {
+                sh 'kubectl apply -f springapp.yml'
+            }
+        }
     }
 }
