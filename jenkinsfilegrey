@@ -16,16 +16,20 @@ pipeline {
             steps {
                 sh 'mvn clean package'
             }
-     }
+        }
         stage("docker build") {
-             steps {
+            steps {
                 sh 'docker build -t greyspringapp.v1 .'
+            }
+        }
         stage('Push Docker Image') {
-             steps {
+            steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-login') {
                         sh 'docker tag greyabiwon/greyspringapp.v1:latest'
                         sh 'docker push greyabiwon/greyspringapp.v1:latest'
+                    }
+                }
             }
         }
     }
