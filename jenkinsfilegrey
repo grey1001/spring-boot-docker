@@ -40,8 +40,8 @@ pipeline {
         }
         stage("deploytok8s") {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'eks-credentials', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                    // some block
+               withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'eks-credentials-yml', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                // some block
                     sh 'kubectl apply -f springapp.yml'
                 }
             }
