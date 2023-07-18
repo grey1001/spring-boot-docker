@@ -1,8 +1,8 @@
 pipeline {
     agent {
-        label 'any'
+        label 'node1'
     }
-    
+}
     tools {
         maven 'mymaven'
         dockerTool 'mydocker' // Name of the Docker installation configured in Jenkins
@@ -13,6 +13,4 @@ pipeline {
         stage('SCM Checkout') {
             git clone: 'https://github.com/grey1001/spring-boot-docker.git'
         }
-    
-    
-      
+    }
