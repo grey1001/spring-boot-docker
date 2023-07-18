@@ -20,6 +20,12 @@ pipeline {
         stage("docker build") {
              steps {
                 sh 'docker build -t greyspringapp.v1 .'
+        stage('Push Docker Image') {
+             steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-login') {
+                        sh 'docker tag greyabiwon/greyspringapp.v1:latest'
+                        sh 'docker push greyabiwon/greyspringapp.v1:latest'
             }
         }
     }
