@@ -1,70 +1,48 @@
-pipeline
-{
-    agent label: 'master_node'
-
-    tools
-    {
+pipeline {
+    agent {
+        label 'master_node'
+    }
+    tools {
         maven 'mymaven'
         dockerTool 'mydocker'
     }
-
-    environment
-    {
+    environment {
         DOCKER_IMAGE_NAME = "greyabiwon/spring-boot-docker:v1"
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_ACCESS_KEY = credentials('AWS_ACCESS_KEY')
         AWS_DEFAULT_REGION = "eu-west-3"
     }
-
-    stages
-    {
-        stage("Clone Source")
-        {
-            steps
-            {
+    stages {
+        stage("Clone Source") {
+            steps {
                 git url: 'https://github.com/grey1001/spring-boot-docker.git'
             }
         }
-
-        stage("Build")
-        {
-            steps
-            {
+        stage("Build") {
+            steps {
                 sh 'mvn clean package'
             }
         }
-
-        stage('Build Docker Image')
-        {
-            steps
-            {
-                script
-                {
+        stage('Build Docker Image') {
+            steps {
+                script {
                     def app = docker.build(DOCKER_IMAGE_NAME)
                 }
             }
         }
-
-        stage('Push Docker Image')
-        {
-            steps
-            {
-                script
-                {
+        stage('Push Docker Image') {
+            steps {
+                script {
                     def app = docker.image(DOCKER_IMAGE_NAME)
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-login')
-                    {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-login') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
                 }
             }
         }
-
-        stage("deploytok8s")
-        {
-            steps
-            {
+        stage("deploytok8s") {
+            steps {
                 sh 'kubectl apply -f springapp.yml'
             }
         }
