@@ -12,5 +12,8 @@ pipeline {
                 git url: 'https://github.com/grey1001/spring-boot-docker.git'
             }
         }
+        stage("Build") {
+            sh 'mvn clean package'
+        }
     }
 }
