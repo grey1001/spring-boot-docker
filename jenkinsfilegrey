@@ -17,9 +17,9 @@ pipeline {
                 sh 'mvn clean package'
             }
      }
-        stage("SonarQube") {
+        stage("Nexus Upload") {
              steps {
-                sh 'mvn sonar:sonar'
+                sh 'mvn deploy'
             }
         }
     }
