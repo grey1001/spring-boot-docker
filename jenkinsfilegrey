@@ -17,9 +17,9 @@ pipeline {
                 sh 'mvn clean package'
             }
      }
-        stage("Nexus Upload") {
+        stage("docker build") {
              steps {
-                sh 'mvn deploy'
+                sh 'docker build -t greyspringapp.v1 .'
             }
         }
     }
