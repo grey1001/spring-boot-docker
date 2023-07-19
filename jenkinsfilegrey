@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'master_node'
-    }
+    agent any
     tools {
         maven 'mymaven'
         dockerTool 'mydocker'
