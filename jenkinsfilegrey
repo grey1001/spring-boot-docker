@@ -16,29 +16,29 @@ pipeline {
                 git url: 'https://github.com/grey1001/spring-boot-docker.git'
             }
         }
-        stage("Build") {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    def app = docker.build(DOCKER_IMAGE_NAME)
-                }
-            }
-        }
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    def app = docker.image(DOCKER_IMAGE_NAME)
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
-            }
-        }
+        //stage("Build") {
+          //  steps {
+            //    sh 'mvn clean package'
+            //}
+        //}
+        //stage('Build Docker Image') {
+          //  steps {
+            //    script {
+              //      def app = docker.build(DOCKER_IMAGE_NAME)
+                //}
+            //}
+        //}
+        //stage('Push Docker Image') {
+          //  steps {
+            //    script {
+              //      def app = docker.image(DOCKER_IMAGE_NAME)
+                //    docker.withRegistry('https://registry.hub.docker.com', 'docker-login') {
+                  //      app.push("${env.BUILD_NUMBER}")
+                    //    app.push("latest")
+                    //}
+                //}
+            //}
+        //}
         //stage("create EKS cluster") {
             //steps {
                 //sh 'terraform init'
