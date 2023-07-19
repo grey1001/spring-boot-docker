@@ -39,15 +39,15 @@ pipeline {
                 }
             }
         }
-        stage("create EKS cluster") {
-            steps {
-                sh 'terraform init'
-                sh 'terraform apply --auto-approve'
-            }
-        }
+        //stage("create EKS cluster") {
+            //steps {
+                //sh 'terraform init'
+                //sh 'terraform apply --auto-approve'
+            //}
+        //}
          stage("Access the cluster") {
              steps {
-                 sh 'aws eks update-kubeconfig --region eu-west-3 --name my-cluster3'
+                 sh 'aws eks update-kubeconfig --region eu-west-3 --name my-cluster5'
              }
          }
          stage("deploytok8s") {
