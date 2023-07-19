@@ -4,12 +4,12 @@ pipeline {
         maven 'mymaven'
         dockerTool 'mydocker'
     }
-    environment {
-        DOCKER_IMAGE_NAME = "greyabiwon/spring-boot-docker:v1"
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        AWS_DEFAULT_REGION = "eu-west-3"
-    }
+    // environment {
+    //     DOCKER_IMAGE_NAME = "greyabiwon/spring-boot-docker:v1"
+    //     AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+    //     AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+    //     AWS_DEFAULT_REGION = "eu-west-3"
+    // }
     stages {
         stage("Clone Source") {
             steps {
@@ -45,14 +45,17 @@ pipeline {
                 sh 'terraform apply --auto-approve'
             }
         }
-        stage("Access the cluster") {
-            steps {
-                sh 'aws eks update-kubeconfig --region eu-west-3 --name my-cluster2'
-            }
-        }
+        // stage("Access the cluster") {
+        //     steps {
+        //         sh 'aws eks update-kubeconfig --region eu-west-3 --name my-cluster2'
+        //     }
+        // }
         stage("deploytok8s") {
             steps {
-                sh 'kubectl apply -f springapp.yml'
+                withKubeConfig(caCertificate: '', clusterName: 'my-cluster2', contextName: '', credentialsId: 'KUBECONFIG', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                    // some block
+                    sh 'kubectl apply -f springapp.yml'
+                }
             }
         }
     }
