@@ -41,13 +41,14 @@ pipeline {
                 }
             }
         }
+        stage("create EKS cluster") {
+            steps {
+                sh 'terraform apply --auto-approve'
+            }
+        }
         stage("deploytok8s") {
             steps {
-                script {
-                    dir('spring-boot-docker') {
-                        sh 'kubectl apply -f springapp.yml'
-                    }
-                }
+                sh 'kubectl apply -f springapp.yml'
             }
         }
     }
