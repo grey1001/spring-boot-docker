@@ -1,7 +1,3 @@
-# Provider configuration
-provider "aws" {
-  region = "eu-west-3"  # Replace with your desired region
-}
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.0"
