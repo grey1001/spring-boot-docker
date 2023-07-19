@@ -45,6 +45,11 @@ pipeline {
                 sh 'terraform apply --auto-approve'
             }
         }
+        stage("Access the cluster") {
+            steps {
+                sh 'aws eks update-kubeconfig --region eu-west-3 --name my-cluster'
+            }
+        }
         stage("deploytok8s") {
             steps {
                 sh 'kubectl apply -f springapp.yml'
