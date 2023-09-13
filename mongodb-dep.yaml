@@ -1,47 +1,3 @@
-# Complete Manifest Where in single yml we defined Deployment & Service for SpringApp &
-#PVC(with default  StorageClass),ReplicaSet/StatefulSet & Service For Mongo.
-# storage class, pv, pvc, 
-# configMaps / Secretes
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: springappdeployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: springapp
-  template:
-    metadata:
-      name: springapppod
-      labels:
-        app: springapp
-    spec:
-      containers:
-      - name: springappcontainer
-        image: greyabiwon/spring-boot-docker:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: MONGO_DB_USERNAME
-          value: devdb
-        - name: MONGO_DB_PASSWORD
-          value: devdb@123
-        - name: MONGO_DB_HOSTNAME
-          value: mongo 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: springapp
-spec:
-  selector:
-    app: springapp
-  ports:
-  - port: 80
-    targetPort: 8080
-    nodePort: 30030
-  type: LoadBalancer
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -97,3 +53,4 @@ spec:
   ports:
   - port: 27017
     targetPort: 27017
+---
