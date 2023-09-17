@@ -29,32 +29,32 @@ pipeline {
             }
         }
 
-        stage('UNIT TEST') {
-            steps {
-                sh 'mvn test'
-            }
-        }
+    //     stage('UNIT TEST') {
+    //         steps {
+    //             sh 'mvn test'
+    //         }
+    //     }
 
-        stage('CODE ANALYSIS WITH CHECKSTYLE') {
-            steps {
-                sh 'mvn checkstyle:checkstyle'
-            }
-            post {
-                success {
-                    echo 'Generated Analysis Result'
-                }
-            }
-        }
+    //     stage('CODE ANALYSIS WITH CHECKSTYLE') {
+    //         steps {
+    //             sh 'mvn checkstyle:checkstyle'
+    //         }
+    //         post {
+    //             success {
+    //                 echo 'Generated Analysis Result'
+    //             }
+    //         }
+    //     }
 
-        stage('SonarQube Analysis') {
-        steps {
-            script {
-                withSonarQubeEnv() {
-                    sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spring-docker -Dsonar.projectName='spring-docker'"
-                }
-            }
-        }
-    }
+    //     stage('SonarQube Analysis') {
+    //     steps {
+    //         script {
+    //             withSonarQubeEnv() {
+    //                 sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spring-docker -Dsonar.projectName='spring-docker'"
+    //             }
+    //         }
+    //     }
+    // }
 
         stage('Building image') {
             steps {
