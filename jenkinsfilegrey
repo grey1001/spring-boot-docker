@@ -5,7 +5,6 @@ pipeline {
         // Define your tools here
         maven 'mymaven'
         git 'mygit'
-      
     }
 
     environment {
@@ -29,41 +28,41 @@ pipeline {
             }
         }
 
-    //     stage('UNIT TEST') {
-    //         steps {
-    //             sh 'mvn test'
-    //         }
-    //     }
+        // stage('UNIT TEST') {
+        //     steps {
+        //         sh 'mvn test'
+        //     }
+        // }
 
-    //     stage('CODE ANALYSIS WITH CHECKSTYLE') {
-    //         steps {
-    //             sh 'mvn checkstyle:checkstyle'
-    //         }
-    //         post {
-    //             success {
-    //                 echo 'Generated Analysis Result'
-    //             }
-    //         }
-    //     }
+        // stage('CODE ANALYSIS WITH CHECKSTYLE') {
+        //     steps {
+        //         sh 'mvn checkstyle:checkstyle'
+        //     }
+        //     post {
+        //         success {
+        //             echo 'Generated Analysis Result'
+        //         }
+        //     }
+        // }
 
-    //     stage('SonarQube Analysis') {
-    //     steps {
-    //         script {
-    //             withSonarQubeEnv() {
-    //                 sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spring-docker -Dsonar.projectName='spring-docker'"
-    //             }
-    //         }
-    //     }
-    // }
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         script {
+        //             withSonarQubeEnv() {
+        //                 sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spring-docker -Dsonar.projectName='spring-docker'"
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Building image') {
             steps {
                 script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    dockerImage = docker.build "${registry}:v${BUILD_NUMBER}"
                 }
             }
         }
- 
+
         // stage('Trivy Scan') {
         //     steps {
         //         script {
@@ -86,8 +85,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', registryCredential) {
-                        dockerImage.push("$BUILD_NUMBER")
-                        
+                        dockerImage.push("v${BUILD_NUMBER}")
                     }
                 }
             }
@@ -95,7 +93,7 @@ pipeline {
 
         stage('Remove Unused docker image') {
             steps {
-                sh "docker rmi $registry:$BUILD_NUMBER"
+                sh "docker rmi ${registry}:v${BUILD_NUMBER}"
             }
         }
 
@@ -104,7 +102,7 @@ pipeline {
         stage('Update values.yaml in Git') {
             steps {
                 script {
-                    def newImageTag = "${registry}:${BUILD_NUMBER}"
+                    def newImageTag = "${registry}:v${BUILD_NUMBER}"
                     def gitRepoURL = 'https://github.com/grey1001/spring-boot-docker.git'
                     def gitCredentialsId = 'git_login'
 
@@ -114,35 +112,35 @@ pipeline {
                     }
 
                     // Update the values.yaml file with the new image tag
-                    def valuesYamlPath = '/var/lib/jenkins/workspace/spring-boot-docker/spring-docker/values.yaml'
+                    def valuesYamlPath = '/var/lib/jenkins/workspace/spring-docker/values.yaml'
                     sh "sed -i 's#image: .*#image: ${newImageTag}#' ${valuesYamlPath}"
 
                     // Commit and push the changes
                     git branch: 'master', credentialsId: gitCredentialsId, url: gitRepoURL
                     git add .
+                    git commit -m "Update image tag in values.yaml"
                     git push
                 }
             }
         }
     }
-}
 
-//     post {
-//         failure {
-//             slackSend(
-//                 color: '#FF0000',
-//                 message: "Pipeline failed: ${currentBuild.fullDisplayName}",
-//                 tokenCredentialId: 'slack-token',
-//                 channel: '#devops-cicd'
-//             )
-//         }
-//         success {
-//             slackSend(
-//                 color: 'good',
-//                 message: "Pipeline succeeded: ${currentBuild.fullDisplayName}",
-//                 tokenCredentialId: SLACK_TOKEN,
-//                 channel: '#devops-cicd'
-//             )
-//         }
-//     }
-// }
+    // post {
+    //     failure {
+    //         slackSend(
+    //             color: '#FF0000',
+    //             message: "Pipeline failed: ${currentBuild.fullDisplayName}",
+    //             tokenCredentialId: 'slack-token',
+    //             channel: '#devops-cicd'
+    //         )
+    //     }
+    //     success {
+    //         slackSend(
+    //             color: 'good',
+    //             message: "Pipeline succeeded: ${currentBuild.fullDisplayName}",
+    //             tokenCredentialId: SLACK_TOKEN,
+    //             channel: '#devops-cicd'
+    //         )
+    //     }
+    // }
+}
