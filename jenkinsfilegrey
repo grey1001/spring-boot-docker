@@ -82,22 +82,22 @@ pipeline {
         //     }
         // }
 
-        // stage('Deploy Image') {
-        //     steps {
-        //         script {
-        //             docker.withRegistry('', registryCredential) {
-        //                 dockerImage.push("$BUILD_NUMBER")
+        stage('Deploy Image') {
+            steps {
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push("$BUILD_NUMBER")
                         
-        //             }
-        //         }
-        //     }
-        // }
+                    }
+                }
+            }
+        }
 
-        // stage('Remove Unused docker image') {
-        //     steps {
-        //         sh "docker rmi $registry:$BUILD_NUMBER"
-        //     }
-        // }
+        stage('Remove Unused docker image') {
+            steps {
+                sh "docker rmi $registry:$BUILD_NUMBER"
+            }
+        }
 
         // Additional stages can be added here
 
