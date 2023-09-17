@@ -109,12 +109,12 @@ pipeline {
                     def gitCredentialsId = 'git_login'
 
                     // Clone the Git repository
-                    dir('/home/grey/Desktop') {
+                    dir('/var/lib/jenkins') {
                         git branch: 'master', credentialsId: gitCredentialsId, url: gitRepoURL
                     }
 
                     // Update the values.yaml file with the new image tag
-                    def valuesYamlPath = '/home/grey/Desktop/spring-boot-docker/spring-docker/values.yaml'
+                    def valuesYamlPath = '/var/lib/jenkins/spring-boot-docker/spring-docker/values.yaml'
                     sh "sed -i 's#image: .*#image: ${newImageTag}#' ${valuesYamlPath}"
 
                     // Commit and push the changes
