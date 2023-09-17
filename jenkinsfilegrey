@@ -118,7 +118,7 @@ pipeline {
                     // Commit and push the changes
                     sh 'git add .'
                     sh 'git commit -m "Update image tag in values.yaml"'
-                    sh 'git push'
+                    sh 'git push -f origin master'
                 }
             }
         }
