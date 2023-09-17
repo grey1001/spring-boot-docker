@@ -4,6 +4,7 @@ pipeline {
     tools {
         // Define your tools here
         maven 'mymaven'
+        docker 'mydocker'
     }
 
     environment {
