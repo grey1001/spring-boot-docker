@@ -109,7 +109,7 @@ pipeline {
                     def gitCredentialsId = 'git_login'
 
                     // Clone the Git repository
-                    dir('workspace') {
+                    dir('/var/lib/jenkins/workspace') {
                         git branch: 'master', credentialsId: gitCredentialsId, url: gitRepoURL
                     }
 
