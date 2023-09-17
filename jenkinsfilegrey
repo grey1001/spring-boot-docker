@@ -116,10 +116,9 @@ pipeline {
                     sh "sed -i 's#image: .*#image: ${newImageTag}#' ${valuesYamlPath}"
 
                     // Commit and push the changes
-                    git branch: 'master', credentialsId: gitCredentialsId, url: gitRepoURL
-                    git add .
-                    git commit -m "Update image tag in values.yaml"
-                    git push
+                    sh 'git add .'
+                    sh 'git commit -m "Update image tag in values.yaml"'
+                    sh 'git push'
                 }
             }
         }
