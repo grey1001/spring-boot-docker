@@ -114,7 +114,7 @@ pipeline {
                     }
 
                     // Update the values.yaml file with the new image tag
-                    def valuesYamlPath = 'spring-docker/values.yaml'
+                    def valuesYamlPath = 'spring-boot-docker/spring-docker/values.yaml'
                     sh "sed -i 's#image: .*#image: ${newImageTag}#' ${valuesYamlPath}"
 
                     // Commit and push the changes
