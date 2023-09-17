@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         registry = "greyabiwon/spring-boot-docker"
-        registryCredential = 'docker-login'
+        registryCredential = 'docker_login'
         SONAR_TOKEN = 'SONAR_TOKEN'
         SLACK_TOKEN = 'slack-token'
     }
