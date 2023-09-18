@@ -4,7 +4,7 @@ pipeline {
     tools {
         // Define your tools here
         maven 'mymaven'
-        git 'mygit'
+        // git 'mygit'
     }
 
     environment {
