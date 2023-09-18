@@ -1,11 +1,11 @@
 pipeline {
     agent any
 
-    tools {
-        // Define your tools here
-        // maven 'mymaven'
-        // git 'mygit'
-    }
+    // tools {
+    //     // Define your tools here
+    //     // maven 'mymaven'
+    //     // git 'mygit'
+    // }
 
     environment {
         registry = "greyabiwon/spring-boot-docker"
