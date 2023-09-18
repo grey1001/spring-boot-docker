@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         // Define your tools here
-        maven 'mymaven'
+        // maven 'mymaven'
         // git 'mygit'
     }
 
@@ -46,14 +46,16 @@ pipeline {
         // }
 
         stage('SonarQube Analysis') {
+            def mvn = tool 'mymaven';
             steps {
                 script {
-                    withSonarQubeEnv() {
+                    withSonarQubeEnv('Your_SonarQube_Server') {
                         sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spring-docker -Dsonar.projectName='spring-docker'"
-                    }
-                }
             }
         }
+    }
+}
+
 
         // stage('Building image') {
         //     steps {
