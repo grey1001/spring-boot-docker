@@ -22,11 +22,11 @@ pipeline {
             }
         }
 
-        stage('BUILD') {
-            steps {
-                sh 'mvn clean install'
-            }
-        }
+        // stage('BUILD') {
+        //     steps {
+        //         sh 'mvn clean install'
+        //     }
+        // }
 
         // stage('UNIT TEST') {
         //     steps {
@@ -45,23 +45,23 @@ pipeline {
         //     }
         // }
 
-        // stage('SonarQube Analysis') {
-        //     steps {
-        //         script {
-        //             withSonarQubeEnv() {
-        //                 sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spring-docker -Dsonar.projectName='spring-docker'"
-        //             }
-        //         }
-        //     }
-        // }
-
-        stage('Building image') {
+        stage('SonarQube Analysis') {
             steps {
                 script {
-                    dockerImage = docker.build "${registry}:v${BUILD_NUMBER}"
+                    withSonarQubeEnv() {
+                        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=spring-docker -Dsonar.projectName='spring-docker'"
+                    }
                 }
             }
         }
+
+        // stage('Building image') {
+        //     steps {
+        //         script {
+        //             dockerImage = docker.build "${registry}:v${BUILD_NUMBER}"
+        //         }
+        //     }
+        // }
 
         // stage('Trivy Scan') {
         //     steps {
@@ -81,48 +81,48 @@ pipeline {
         //     }
         // }
 
-        stage('Deploy Image') {
-            steps {
-                script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push("v${BUILD_NUMBER}")
-                    }
-                }
-            }
-        }
+        // stage('Deploy Image') {
+        //     steps {
+        //         script {
+        //             docker.withRegistry('', registryCredential) {
+        //                 dockerImage.push("v${BUILD_NUMBER}")
+        //             }
+        //         }
+        //     }
+        // }
 
-        stage('Remove Unused docker image') {
-            steps {
-                sh "docker rmi ${registry}:v${BUILD_NUMBER}"
-            }
-        }
+        // stage('Remove Unused docker image') {
+        //     steps {
+        //         sh "docker rmi ${registry}:v${BUILD_NUMBER}"
+        //     }
+        // }
 
         // Additional stages can be added here
 
-        stage('Update values.yaml in Git') {
-            steps {
-                script {
-                    def newImageTag = "${registry}:v${BUILD_NUMBER}"
-                    def gitRepoURL = 'https://github.com/grey1001/spring-boot-docker.git'
-                    def gitCredentialsId = 'git_login'
+    //     stage('Update values.yaml in Git') {
+    //         steps {
+    //             script {
+    //                 def newImageTag = "${registry}:v${BUILD_NUMBER}"
+    //                 def gitRepoURL = 'https://github.com/grey1001/spring-boot-docker.git'
+    //                 def gitCredentialsId = 'git_login'
 
-                    // Clone the Git repository
-                    dir('var/lib/jenkins/workspace') {
-                        git branch: 'master', credentialsId: gitCredentialsId, url: gitRepoURL
-                    }
+    //                 // Clone the Git repository
+    //                 dir('var/lib/jenkins/workspace') {
+    //                     git branch: 'master', credentialsId: gitCredentialsId, url: gitRepoURL
+    //                 }
 
-                    // Update the values.yaml file with the new image tag
-                    def valuesYamlPath = '/var/lib/jenkins/workspace/spring-docker/values.yaml'
-                    sh "sed -i 's#image: .*#image: ${newImageTag}#' ${valuesYamlPath}"
+    //                 // Update the values.yaml file with the new image tag
+    //                 def valuesYamlPath = '/var/lib/jenkins/workspace/spring-docker/values.yaml'
+    //                 sh "sed -i 's#image: .*#image: ${newImageTag}#' ${valuesYamlPath}"
 
-                    // Commit and push the changes
-                    sh 'git add .'
-                    sh 'git commit -m "Update image tag in values.yaml"'
-                    sh 'git push -f origin master'
-                }
-            }
-        }
-    }
+    //                 // Commit and push the changes
+    //                 sh 'git add .'
+    //                 sh 'git commit -m "Update image tag in values.yaml"'
+    //                 sh 'git push -f origin master'
+    //             }
+    //         }
+    //     }
+    // }
 
     // post {
     //     failure {
@@ -142,4 +142,5 @@ pipeline {
     //         )
     //     }
     // }
+    }
 }
